@@ -1,118 +1,83 @@
-# MoveItを使ったロボットアーム制御プロジェクト
+# MoveIt 2 を使った 6-DoF ロボットアーム可視化・プランニング環境
 
 ## 概要
 
-このプロジェクトは、**macOS上のDockerベース開発環境**で**ROS 2 Jazzy**を使用して、**MoveIt 2**による**2自由度ロボットアーム制御システム**を構築するプロジェクトです。
+このプロジェクトは、**macOS 上の Docker コンテナ**で **ROS 2 Jazzy + MoveIt 2** を動かし、
 
-システムは**MoveIt 2**を使用してモーションプランニングと実行を行い、`foxglove_bridge`を使用して**Foxglove**経由で内部状態（TF、JointState）を可視化します。
+- 6-DoF ロボットアームの **URDF/SRDF モデル**
+- MoveIt 2 による **軌道計画（MoveGroup アクション）**
+- `/joint_states` を使った **軌道の再生と可視化**
+- **Foxglove Studio / RViz** 上での 3D 表示
 
-### プロジェクトの構成
+を一通り試すための最小構成のワークスペースです。
 
-- **robot_description**: 2自由度ロボットアームのURDF/xacroモデル
-- **moveit_config**: MoveIt設定ファイル（SRDF、joint_limits、kinematics等）
-- **可視化**: Foxglove Studioを使用したTFツリーと3Dビューの表示
+MoveIt の詳細な仕組みや、このリポジトリのコードが何をしているかは  
+`MOVEIT_TECHNICAL_GUIDE.md` にメモとしてまとめています。
 
-### 主な機能
+---
 
-- ✅ 2自由度ロボットアームのURDF/xacroモデル
-- ✅ MoveIt 2によるモーションプランニング
-- ✅ TFツリーの可視化（Foxglove）
-- ✅ 3Dビューでのロボットアーム表示（Foxglove）
-- ✅ JointStateのパブリッシュと可視化
-- ✅ MoveIt Python API（moveit_commander）の使用例
+## プロジェクト構成
 
-### 背景・制約
+### ディレクトリ構成
 
-- **ホストOS**: macOS
-- **制約**: macOSではLinuxのGUIツール（RViz、Gazebo等）が直接動作しない
-- **解決策**: GUIツールとしてFoxglove Studioを使用（WebベースのためMacでも利用可能）
-- **ROS 2**: Jazzy Jalisco
-- **MoveIt**: MoveIt 2
-
-### 要件
-
-#### 1. Docker環境
-- ROS2 Jazzyが動作するDockerコンテナ
-- MoveIt 2パッケージがインストール済み
-- コンテナ内でROS2ノードの実行が可能
-- ネットワーク設定により、ホストマシンや他のコンテナと通信可能
-
-#### 2. Foxglove統合
-- ROS2のトピックをFoxglove Studioに接続可能
-- Foxglove BridgeまたはFoxglove WebSocketサーバーを使用
-- コンテナ内のROS2トピックを外部（Foxglove Studio）に公開
-
-#### 3. 開発環境
-- コードの編集・デバッグが容易
-- ボリュームマウントにより、ホスト側のコードをコンテナ内で実行可能
-
-### 技術スタック
-
-- **ROS 2**: Jazzy Jalisco
-- **MoveIt**: MoveIt 2
-- **Docker**: Docker Desktop for Mac
-- **GUIツール**: Foxglove Studio（Webアプリケーション）
-- **通信**: Foxglove Bridge（ROS2 ↔ Foxglove Studio）
-- **プランニング**: OMPL（Open Motion Planning Library）
-
-### 構成要素
-
-#### Docker Compose構成
-- ROS2コンテナ（ベースイメージ: `ros:jazzy`）
-- MoveIt 2パッケージがインストール済み
-- Foxglove BridgeはROS2コンテナ内で直接実行
-- ポート8765をホストに公開（Foxglove Studio接続用）
-- `workspace/src`のみをホストと共有（build/install/logはコンテナ内のみ）
-
-#### ファイル構成
-```
+```text
 .
-├── README.md                 # このファイル
-├── docker-compose.yml        # Docker Compose設定
-├── Dockerfile                # ROS2 Dockerイメージ定義
-├── .dockerignore            # Dockerビルド時の除外ファイル
-├── .gitignore               # Git除外ファイル
-└── workspace/               # ROS2ワークスペース
-    └── src/                  # ソースコード（ホストと共有）
-        ├── robot_description/  # ロボットモデル（URDF/xacro）
-        │   ├── urdf/
-        │   │   └── arm.urdf.xacro
-        │   └── launch/
-        │       └── display.launch.py
-        ├── moveit_config/      # MoveIt設定
-        │   ├── config/
-        │   │   ├── 2dof_arm.srdf
-        │   │   ├── joint_limits.yaml
-        │   │   ├── kinematics.yaml
-        │   │   ├── moveit_controllers.yaml
-        │   │   ├── planning_pipelines.yaml
-        │   │   └── ompl_planning.yaml
-        │   └── launch/
-        │       ├── move_group.launch.py
-        │       └── demo.launch.py
-        ├── moveit_demo.py           # MoveItデモスクリプト
-        ├── moveit_simple_demo.py    # moveit_commander使用例
-        ├── moveit_advanced_demo.py  # MoveIt高度デモ（衝突回避、複雑な動作計画）
-        ├── move_arm_simple.py       # 基本的な動作スクリプト（直接/joint_statesにパブリッシュ）
-        └── move_arm_with_moveit.py  # MoveItアクションAPI使用例
+├── README.md
+├── docker-compose.yml          # ROS 2 コンテナ起動用
+├── Dockerfile                  # ros:jazzy ベースの開発用イメージ
+├── INSTALL_MOVEIT.md           # MoveIt パッケージ手動インストール手順
+├── MOVEIT_TECHNICAL_GUIDE.md   # MoveIt の仕組みとこのプロジェクトでの使い方メモ
+└── workspace/
+    └── src/
+        ├── robot_description/  # アームの URDF/xacro（6-DoF）
+        ├── moveit_config/      # MoveIt 設定一式（SRDF, joint_limits など）
+        ├── moveit_advanced_demo.py   # MoveGroup アクションで軌道を取り出し /joint_states で再生するノード
+        ├── run_named_poses.py        # 名前付きポーズ＋障害物追加を含むデモのエントリポイント
+        ├── find_joint_states_publishers.sh
+        ├── find_and_stop_joint_state_publisher.sh
+        └── stop_joint_state_publisher.sh
 ```
+
+- **robot_description**: 6 関節アームの URDF/xacro モデル
+- **moveit_config**:  
+  - `config/2dof_arm.srdf`: 実際には 6-DoF アーム用の SRDF（プランニンググループ `arm_group` と多数の名前付きポーズ定義）
+  - `joint_limits.yaml`, `kinematics.yaml`, `ompl_planning.yaml` などの MoveIt 設定
+- **moveit_advanced_demo.py**:  
+  MoveGroup アクションを叩いて軌道を取得し、自前で `/joint_states` をパブリッシュして可視化するノード
+- **run_named_poses.py**:  
+  SRDF で定義した **名前付きポーズのシーケンス**を順番に MoveIt に送り、障害物を 1 個置いた状態で軌道を計画・再生するスクリプト  
+  → 日常的にはこちらを実行すればデモが動きます。
+
+MoveIt の設定内容や `run_named_poses.py` / `moveit_advanced_demo.py` の役割分担は  
+`MOVEIT_TECHNICAL_GUIDE.md` に詳しく書いてあります。
+
+---
 
 ## クイックスタート
 
-### 1. コンテナのビルドと起動
+### 1. Docker コンテナのビルド・起動
+
+ホスト（macOS）側で:
 
 ```bash
-# Dockerイメージをビルドしてコンテナを起動
 docker-compose up -d --build
 ```
 
-### 2. MoveItパッケージのインストール（コンテナ内で手動実行）
+起動後、以下でコンテナに入ります。
 
 ```bash
-# コンテナに入る
 docker-compose exec ros2 bash
+```
 
-# MoveItパッケージをインストール
+以降、特に断りがなければ「コンテナ内」での操作です。
+
+---
+
+### 2. MoveIt パッケージのインストール（初回のみ）
+
+コンテナ内で、MoveIt 関連のパッケージをインストールします。
+
+```bash
 apt-get update
 apt-get install -y \
   ros-jazzy-moveit \
@@ -124,35 +89,46 @@ apt-get install -y \
   ros-jazzy-moveit-kinematics \
   ros-jazzy-moveit-visual-tools \
   ros-jazzy-moveit-common
-
-# 注意: moveit_commanderはROS 2 Jazzyでは別パッケージとして提供されていない可能性があります
-# MoveItの基本機能（move_groupノード、プランニング等）は上記のパッケージで動作します
-
-**注意**: インストールに失敗する場合は、リトライしてください：
-```bash
-apt-get update
-apt-get install -y --fix-broken
-apt-get install -y ros-jazzy-moveit*
 ```
 
-### 3. ワークスペースのビルド
+依存関係のエラーやネットワークエラーが出た場合のリトライ手順などは  
+**`INSTALL_MOVEIT.md`** を参照してください。
+
+---
+
+### 3. ROS 2 ワークスペースのビルド
 
 ```bash
-# ワークスペースをビルド
 cd /workspace
 source /opt/ros/jazzy/setup.bash
 colcon build
 source install/setup.bash
 ```
 
-### 4. MoveItデモの起動（3つのターミナルで実行）
+以降、新しいシェルを開くたびに:
 
-**ターミナル1: Foxglove Bridge**
+```bash
+cd /workspace
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+```
+
+を実行しておきます。
+
+---
+
+### 4. MoveIt + デモの起動
+
+#### ターミナル 1: Foxglove Bridge（任意）
+
 ```bash
 docker-compose exec ros2 bash -c "source /opt/ros/jazzy/setup.bash && ros2 run foxglove_bridge foxglove_bridge"
 ```
 
-**ターミナル2: MoveItデモ（robot_state_publisher + move_group）**
+Foxglove Studio から `ws://localhost:8765` へ接続することで、トピックや `/joint_states`、3D 表示などをブラウザで確認できます。
+
+#### ターミナル 2: MoveIt（move_group + RViz）
+
 ```bash
 docker-compose exec ros2 bash
 cd /workspace
@@ -161,259 +137,101 @@ source install/setup.bash
 ros2 launch moveit_config demo.launch.py
 ```
 
-**ターミナル3: アームを動かすスクリプト**
+これにより、
 
-基本的な動作（直接`/joint_states`にパブリッシュ）:
+- MoveIt の `move_group` ノード
+- RViz によるロボットモデルと PlanningScene の表示
+
+が立ち上がります。
+
+#### ターミナル 3: 名前付きポーズ＋障害物デモ（推奨）
+
 ```bash
 docker-compose exec ros2 bash
 cd /workspace
 source /opt/ros/jazzy/setup.bash
 source install/setup.bash
-python3 src/move_arm_simple.py
+python3 src/run_named_poses.py
 ```
 
-MoveItを使った高度なデモ（衝突回避、複雑な動作計画）:
-```bash
-docker-compose exec ros2 bash
-cd /workspace
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-python3 src/moveit_advanced_demo.py
-```
+このスクリプトは:
 
-**注意**: `moveit_advanced_demo.py`は、MoveItのアクションサーバーが起動している必要があります（ターミナル2で`demo.launch.py`を実行していること）。
+- PlanningScene に **直方体の障害物を 1 つ追加**
+- SRDF で定義した **名前付きポーズのシーケンス**を、MoveGroup アクションで順番に目標として送信
+- 返ってきた軌道を **`/joint_states`** に流し直して、RViz / Foxglove 上でアームの動きを再生
 
-### 5. Foxglove Studioで確認
+するデモです。MoveIt 自体は「plan_only」で動き、実機はつながっていない前提です。
 
-1. [https://studio.foxglove.dev](https://studio.foxglove.dev) にアクセス
-2. 「Open Connection」→「Foxglove WebSocket」→`ws://localhost:8765`
-3. 「TF」パネルと「3D」パネルを追加してロボットアームを確認
+`run_named_poses.py` / `moveit_advanced_demo.py` の中身やシーケンスの意図は  
+`MOVEIT_TECHNICAL_GUIDE.md` の付録を参照してください。
 
 ---
 
-## MoveItの使い方
+### 5. Foxglove Studio からの確認（任意）
 
-### MoveIt設定ファイル
+1. ブラウザで `https://studio.foxglove.dev` を開く
+2. 「Open Connection」→「Foxglove WebSocket」→ `ws://localhost:8765`
+3. 以下のようなパネルを追加
+   - **TF** パネル
+   - **3D** パネル（`/joint_states` によるロボット表示、`/obstacle_markers` を 3D オブジェクトとして表示）
 
-MoveIt設定は`moveit_config/config/`ディレクトリにあります：
-
-- **2dof_arm.srdf**: セマンティックロボット記述（プランニンググループ、エンドエフェクター定義）
-- **joint_limits.yaml**: 関節の制限（速度、加速度、位置範囲）
-- **kinematics.yaml**: 運動学ソルバーの設定
-- **moveit_controllers.yaml**: MoveItで使用するコントローラーの設定
-- **planning_pipelines.yaml**: プランニングパイプラインの設定
-- **ompl_planning.yaml**: OMPLプランナーの設定
-
-### MoveIt Python API
-
-**注意**: `moveit_commander`はROS 2 Jazzyでは利用できない可能性があります。MoveItの基本機能（move_groupノード、プランニング等）はC++ APIやROS 2のアクション/サービスインターフェースを通じて使用できます。
-
-PythonからMoveItを使用する場合は、以下の方法があります：
-- ROS 2のアクションクライアントを使用（`moveit_msgs.action.MoveGroup`）
-- C++ APIをPythonから呼び出す（pybind11等を使用）
-- moveit_commanderをソースからビルドする
-
-### MoveIt C++ API
-
-C++でMoveItを使用する場合は、`moveit_ros_move_group`パッケージの`MoveGroupInterface`を使用します。
+`run_named_poses.py` は Foxglove 用に `/obstacle_markers`（オレンジ色の箱）もパブリッシュしているため、  
+障害物の位置と、MoveIt がそれを避ける軌道の両方をブラウザ上で確認できます。
 
 ---
 
-## セットアップ手順（詳細）
+## MoveIt 設定ファイルの場所
 
-### 前提条件
+`workspace/src/moveit_config/config/` に MoveIt 関連の設定ファイルがあります。
 
-- Docker Desktop for Macがインストールされていること
-- インターネット接続があること
+- **2dof_arm.srdf**  
+  実際には 6-DoF アーム用の SRDF です。  
+  - プランニンググループ `arm_group`
+  - エンドエフェクタ `tool_link`
+  - 多数の **名前付きポーズ (group_state)**  
+    例: `home`, `ready`, `vertical`, `elbow_bent`, `tilt_down`, `pick_pose`, `place_pose` など
+- **joint_limits.yaml**: 各関節の位置 / 速度 / 加速度リミット
+- **kinematics.yaml**: KDL ベースの運動学プラグイン設定
+- **ompl_planning.yaml** / **planning_pipelines.yaml**: OMPL を用いたプランニングの設定
+- **moveit_controllers.yaml**: MoveIt 側から見るコントローラ設定
 
-### 1. 環境変数の設定（オプション）
-
-`.env`ファイルを作成して、必要に応じて環境変数を設定します：
-
-```bash
-# .envファイルを作成（オプション）
-cat > .env << EOF
-ROS_DOMAIN_ID=0
-EOF
-```
-
-**注意**: `ROS_DOMAIN_ID`はデフォルトで0が設定されているため、`.env`ファイルは必須ではありません。
-
-### 2. Dockerイメージのビルドとコンテナの起動
-
-```bash
-# Docker Composeでコンテナをビルド・起動
-docker-compose up -d --build
-
-# ROS2コンテナに入る
-docker-compose exec ros2 bash
-```
-
-### 3. MoveItパッケージのインストール（コンテナ内で手動実行）
-
-コンテナ内で以下のコマンドを実行：
-
-```bash
-# MoveItパッケージをインストール
-apt-get update
-apt-get install -y \
-  ros-jazzy-moveit \
-  ros-jazzy-moveit-core \
-  ros-jazzy-moveit-ros-planning-interface \
-  ros-jazzy-moveit-ros-move-group \
-  ros-jazzy-moveit-planners \
-  ros-jazzy-moveit-planners-ompl \
-  ros-jazzy-moveit-kinematics \
-  ros-jazzy-moveit-visual-tools \
-  ros-jazzy-moveit-common
-
-# moveit_commanderはROS 2 Jazzyでは利用できない可能性があります
-# MoveItの基本機能は上記のパッケージで動作します
-
-# インストールに失敗する場合は、以下を試してください：
-# apt-get install -y --fix-broken
-# apt-get install -y ros-jazzy-moveit*
-```
-
-### 4. ROS2ワークスペースのビルド
-
-コンテナ内で以下のコマンドを実行：
-
-```bash
-# ワークスペースディレクトリに移動
-cd /workspace
-
-# ROS2環境をセットアップ
-source /opt/ros/jazzy/setup.bash
-
-# ワークスペースをビルド
-colcon build
-
-# ビルドしたパッケージを環境に追加
-source install/setup.bash
-```
-
-### 5. MoveItの動作確認
-
-```bash
-# MoveItデモを起動
-ros2 launch moveit_config demo.launch.py
-```
-
-別のターミナルで：
-
-```bash
-# 関節状態を確認
-ros2 topic echo /joint_states
-
-# MoveItの状態を確認
-ros2 topic list | grep move_group
-```
+MoveIt の概念（URDF / SRDF / PlanningScene / MoveGroup アクションなど）は  
+`MOVEIT_TECHNICAL_GUIDE.md` に図やサンプルと一緒にまとめています。
 
 ---
 
-## MoveIt高度デモ
+## MoveIt 設定のカスタマイズ
 
-`moveit_advanced_demo.py`は、MoveItの効果を最大限実感できるデモです。
+- **プランニンググループの変更**  
+  `moveit_config/config/2dof_arm.srdf` の `<group>` / `<group_state>` を編集します。
 
-### デモの内容
+- **関節制限の変更**  
+  `moveit_config/config/joint_limits.yaml` の各ジョイントの範囲を変更します。
 
-1. **障害物の追加と削除**: Planning Sceneに障害物を動的に追加/削除
-2. **衝突回避**: MoveItが自動で衝突を回避する経路を計画
-3. **複雑な動作計画**: ピックアンドプレース風の動作シーケンス
-4. **最適化された軌道**: 障害物の有無による経路の違いを実感
-
-### 実行方法
-
-```bash
-# ターミナル1: MoveItを起動
-ros2 launch moveit_config demo.launch.py
-
-# ターミナル2: 高度デモを実行
-cd /workspace
-source install/setup.bash
-python3 src/moveit_advanced_demo.py
-```
-
-詳細は [`MOVEIT_ADVANCED_DEMO.md`](MOVEIT_ADVANCED_DEMO.md) を参照してください。
-
----
-
-## MoveIt高度デモ
-
-`moveit_advanced_demo.py`は、MoveItの効果を最大限実感できるデモです。
-
-### デモの内容
-
-1. **障害物の追加と削除**: Planning Sceneに障害物を動的に追加/削除
-2. **衝突回避**: MoveItが自動で衝突を回避する経路を計画
-3. **複雑な動作計画**: ピックアンドプレース風の動作シーケンス
-4. **最適化された軌道**: 障害物の有無による経路の違いを実感
-
-### 実行方法
-
-```bash
-# ターミナル1: MoveItを起動
-ros2 launch moveit_config demo.launch.py
-
-# ターミナル2: 高度デモを実行
-cd /workspace
-source install/setup.bash
-python3 src/moveit_advanced_demo.py
-```
-
-詳細は [`MOVEIT_ADVANCED_DEMO.md`](MOVEIT_ADVANCED_DEMO.md) を参照してください。
-
----
-
-## MoveIt設定のカスタマイズ
-
-### プランニンググループの変更
-
-`moveit_config/config/2dof_arm.srdf`を編集して、プランニンググループを変更できます。
-
-### 関節制限の変更
-
-`moveit_config/config/joint_limits.yaml`を編集して、関節の制限を変更できます。
-
-### プランナーの変更
-
-`moveit_config/config/ompl_planning.yaml`を編集して、使用するプランナーを変更できます。
+- **プランナーの変更**  
+  `moveit_config/config/ompl_planning.yaml` を編集し、使用するプランナー（RRT*, PRM など）やパラメータを調整します。
 
 ---
 
 ## トラブルシューティング
 
-### MoveItが起動しない
+- **MoveIt（demo.launch.py）が立ち上がらない**  
+  - `cd /workspace && colcon build` が通っているか
+  - `source /opt/ros/jazzy/setup.bash` と `source install/setup.bash` を実行しているか
 
-1. ワークスペースが正しくビルドされているか確認：
-   ```bash
-   colcon build
-   source install/setup.bash
-   ```
+- **MoveGroup アクションに接続できない / デモがすぐ終了する**  
+  - 先に `ros2 launch moveit_config demo.launch.py` を立ち上げているか
+  - `ros2 action list -t | grep MoveGroup` で MoveGroup アクションが見えているか
 
-2. MoveItパッケージがインストールされているか確認：
-   ```bash
-   apt list --installed | grep moveit
-   ```
+- **軌道計画が頻繁に失敗する**  
+  - 目標姿勢がジョイントリミット内か（`joint_limits.yaml`）
+  - SRDF の group_state と `run_named_poses.py` の姿勢定義がずれていないか
+  - 障害物の位置が極端に近すぎないか（`run_named_poses.py` 内の定数）
 
-### プランニングが失敗する
-
-1. 関節制限が正しく設定されているか確認（`joint_limits.yaml`）
-2. SRDFファイルが正しく設定されているか確認（`2dof_arm.srdf`）
-3. 運動学ソルバーが正しく設定されているか確認（`kinematics.yaml`）
-
-### Foxglove Studioに接続できない
-
-1. Foxglove Bridgeが起動しているか確認：
-   ```bash
-   ros2 run foxglove_bridge foxglove_bridge
-   ```
-
-2. ポート8765が正しく公開されているか確認：
-   ```bash
-   docker-compose ps
-   ```
+- **Foxglove Studio からつながらない**  
+  - Foxglove Bridge が起動しているか  
+    `ros2 run foxglove_bridge foxglove_bridge`
+  - `docker-compose.yml` で `8765:8765` が公開されているか
 
 ---
 

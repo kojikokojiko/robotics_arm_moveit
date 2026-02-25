@@ -1,0 +1,15 @@
+services:
+  ros2:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ros2_moveit_env
+    volumes:
+      - ./workspace/src:/workspace/src
+    ports:
+      - "8765:8765"  # Foxglove WebSocket port
+    environment:
+      - ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-0}
+    stdin_open: true
+    tty: true
+    command: /bin/bash

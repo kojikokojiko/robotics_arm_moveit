@@ -1,0 +1,33 @@
+# MoveIt controller configuration (move_group ノードスコープ)
+# controller_list と moveit_simple_controller_manager の両方が必要（MoveIt2 で "No controller_names specified" を防ぐ）
+# 6-DoFアーム用: joint1～joint6 すべてを含める
+move_group:
+  ros__parameters:
+    controller_manager_ns: controller_manager
+    controller_list:
+      - name: arm_controller
+        action_ns: follow_joint_trajectory
+        type: FollowJointTrajectory
+        default: true
+        joints:
+          - joint1
+          - joint2
+          - joint3
+          - joint4
+          - joint5
+          - joint6
+    # simple_controller_manager プラグイン用（controller_names が無いとエラーになる）
+    moveit_simple_controller_manager:
+      controller_names:
+        - arm_controller
+      arm_controller:
+        action_ns: follow_joint_trajectory
+        type: FollowJointTrajectory
+        default: true
+        joints:
+          - joint1
+          - joint2
+          - joint3
+          - joint4
+          - joint5
+          - joint6

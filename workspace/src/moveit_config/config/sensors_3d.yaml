@@ -1,0 +1,5 @@
+# 3D sensor configuration for MoveIt
+# This file is optional and can be used to configure sensors for collision checking
+# For now, empty list as we're not using sensors (MoveItConfigsBuilder expects sensors: [])
+
+sensors: []

@@ -1,0 +1,23 @@
+# ROS 2
+workspace/build/
+workspace/install/
+workspace/log/
+.colcon_install_layout
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

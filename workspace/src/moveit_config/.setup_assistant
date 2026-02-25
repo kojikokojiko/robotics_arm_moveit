@@ -1,0 +1,6 @@
+moveit_setup_assistant_config:
+  urdf:
+    package: robot_description
+    relative_path: urdf/arm.urdf.xacro
+  srdf:
+    relative_path: config/2dof_arm.srdf

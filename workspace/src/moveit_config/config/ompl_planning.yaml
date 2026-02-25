@@ -1,0 +1,19 @@
+# OMPL planning config (ROS2 params形式)
+# 注: 実際の読み込みは planning_pipelines.yaml に統合済み。単体使用時の参照用。
+move_group:
+  ros__parameters:
+    ompl:
+      planning_plugin: "ompl_interface/OMPLPlanner"
+      request_adapters: >-
+        default_planning_request_adapters/ResolveConstraintFrames
+        default_planning_request_adapters/ValidateWorkspaceBounds
+        default_planning_request_adapters/CheckStartStateBounds
+        default_planning_request_adapters/CheckStartStateCollision
+      response_adapters: >-
+        default_planning_response_adapters/ValidateSolution
+      planner_configs:
+        RRTConnectkConfigDefault:
+          type: geometric::RRTConnect
+          range: 0.0
+      arm_group:
+        default_planner_config: RRTConnectkConfigDefault

@@ -1,0 +1,105 @@
+# Jazzy MoveIt2 標準構造
+# planner_configs, arm_group は ompl セクション内に配置
+
+move_group:
+  ros__parameters:
+    planning_pipelines: ["ompl"]
+    default_planning_pipeline: "ompl"
+
+    ompl:
+      planning_plugins:
+        - ompl_interface/OMPLPlanner
+      request_adapters:
+        - default_planning_request_adapters/ResolveConstraintFrames
+        - default_planning_request_adapters/ValidateWorkspaceBounds
+        - default_planning_request_adapters/CheckStartStateBounds
+        - default_planning_request_adapters/CheckStartStateCollision
+      response_adapters:
+        - default_planning_response_adapters/ValidateSolution
+      planner_configs:
+        SBLkConfigDefault:
+          type: geometric::SBL
+          range: 0.0
+        ESTkConfigDefault:
+          type: geometric::EST
+          range: 0.0
+          goal_bias: 0.05
+        LBKPIECEkConfigDefault:
+          type: geometric::LBKPIECE
+          range: 0.0
+        BKPIECEkConfigDefault:
+          type: geometric::BKPIECE
+          range: 0.0
+        KPIECEkConfigDefault:
+          type: geometric::KPIECE
+          range: 0.0
+        RRTkConfigDefault:
+          type: geometric::RRT
+          range: 0.0
+          goal_bias: 0.05
+        RRTConnectkConfigDefault:
+          type: geometric::RRTConnect
+          range: 0.0
+        RRTstarkConfigDefault:
+          type: geometric::RRTstar
+          range: 0.0
+          goal_bias: 0.05
+          delay_collision_checking: 1
+        TRRTkConfigDefault:
+          type: geometric::TRRT
+          range: 0.0
+          goal_bias: 0.05
+          max_states_failed: 3
+          temp_change_factor: 0.1
+          min_temperature: 0.1
+          init_temperature: 0.15
+          fwd_weight: 0.5
+          no_go_sampling: 0.1
+        PRMkConfigDefault:
+          type: geometric::PRM
+        PRMstarkConfigDefault:
+          type: geometric::PRMstar
+        FMTkConfigDefault:
+          type: geometric::FMT
+          num_samples: 1000
+          radius_multiplier: 1.1
+          nearest_k: 1
+        BFMTkConfigDefault:
+          type: geometric::BFMT
+          num_samples: 1000
+          radius_multiplier: 1.1
+          balanced: 0
+          optimality: 1
+          heuristics: 0
+          nearest_k: 1
+        PDSTkConfigDefault:
+          type: geometric::PDST
+        STRIDEkConfigDefault:
+          type: geometric::STRIDE
+          range: 0.0
+          goal_bias: 0.05
+          use_projected_distance: 0
+          degree: 16
+          max_pts_per_leaf: 6
+        BiTRRTkConfigDefault:
+          type: geometric::BiTRRT
+          range: 0.0
+          temp_change_factor: 0.1
+          init_temperature: 0.15
+          fwd_weight: 0.5
+        LBTRRTkConfigDefault:
+          type: geometric::LBTRRT
+          range: 0.0
+          goal_bias: 0.05
+        BiESTkConfigDefault:
+          type: geometric::BiEST
+          range: 0.0
+        ProjESTkConfigDefault:
+          type: geometric::ProjEST
+          range: 0.0
+          goal_bias: 0.05
+
+      # arm_group は SRDF の group 名と一致、planner_configs は string_array
+      arm_group:
+        default_planner_config: "RRTConnectkConfigDefault"
+        planner_configs: ["RRTConnectkConfigDefault"]

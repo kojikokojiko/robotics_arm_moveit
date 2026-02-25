@@ -1,0 +1,204 @@
+<?xml version="1.0"?>
+<robot name="my_robot">
+  <!-- GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc -->
+  <!-- LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included -->
+  <!-- JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included -->
+  <!-- CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group -->
+  <!-- SUBGROUPS: Groups can also be formed by referencing to already defined group names within this same file -->
+  
+  <group name="arm_group">
+    <joint name="joint1"/>
+    <joint name="joint2"/>
+    <joint name="joint3"/>
+    <joint name="joint4"/>
+    <joint name="joint5"/>
+    <joint name="joint6"/>
+  </group>
+  
+  <!-- END EFFECTOR: Purpose: Represent information about an end effector. -->
+  <end_effector name="tool_link" parent_link="tool_link" group="arm_group"/>
+
+  <!-- NAMED POSES (group_state): 6-DoF を活かした多様な姿勢。計画・デモで参照可能 -->
+  <group_state name="home" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.8"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="ready" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.7"/>
+    <joint name="joint3" value="0.15"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="vertical" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0"/>
+    <joint name="joint3" value="0"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <!-- joint2（肩）を曲げた姿勢：肘が曲がって見える -->
+  <group_state name="elbow_bent" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.0"/>
+    <joint name="joint3" value="0.45"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="arm_forward" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.2"/>
+    <joint name="joint3" value="0.25"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="arm_folded" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.15"/>
+    <joint name="joint3" value="0.6"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <!-- joint2（肩）をさらに曲げた姿勢を追加 -->
+  <group_state name="shoulder_30" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.52"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="shoulder_60" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.05"/>
+    <joint name="joint3" value="0.35"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="shoulder_90" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.57"/>
+    <joint name="joint3" value="0.5"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="shoulder_100" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.75"/>
+    <joint name="joint3" value="0.45"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="arm_down" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.9"/>
+    <joint name="joint3" value="0.5"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="arm_reach" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="2.2"/>
+    <joint name="joint3" value="0.3"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <!-- 手首・先端の向きを変える（j4,j5,j6 活用） -->
+  <group_state name="tilt_down" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.7"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="-0.6"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="tilt_up" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.7"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0.5"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="wrist_roll_90" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.75"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="1.57"/>
+  </group_state>
+  <group_state name="wrist_yaw_left" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.7"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="0.8"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="wrist_yaw_right" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="0.7"/>
+    <joint name="joint3" value="0.2"/>
+    <joint name="joint4" value="-0.8"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <!-- ベース回転＋手首で「右・左を向く」 -->
+  <group_state name="point_right" group="arm_group">
+    <joint name="joint1" value="0.6"/>
+    <joint name="joint2" value="0.75"/>
+    <joint name="joint3" value="0.15"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="point_left" group="arm_group">
+    <joint name="joint1" value="-0.6"/>
+    <joint name="joint2" value="0.75"/>
+    <joint name="joint3" value="0.15"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="0"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <!-- ピック・プレース風（手首下向き／横） -->
+  <group_state name="pick_pose" group="arm_group">
+    <joint name="joint1" value="0"/>
+    <joint name="joint2" value="1.0"/>
+    <joint name="joint3" value="0.4"/>
+    <joint name="joint4" value="0"/>
+    <joint name="joint5" value="-0.7"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+  <group_state name="place_pose" group="arm_group">
+    <joint name="joint1" value="0.3"/>
+    <joint name="joint2" value="0.8"/>
+    <joint name="joint3" value="0.25"/>
+    <joint name="joint4" value="0.5"/>
+    <joint name="joint5" value="0.2"/>
+    <joint name="joint6" value="0"/>
+  </group_state>
+
+  <!-- DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
+  <disable_collisions link1="base_link" link2="shoulder_link" reason="Adjacent"/>
+  <disable_collisions link1="shoulder_link" link2="arm_link" reason="Adjacent"/>
+  <disable_collisions link1="arm_link" link2="elbow_link" reason="Adjacent"/>
+  <disable_collisions link1="elbow_link" link2="forearm_link" reason="Adjacent"/>
+  <disable_collisions link1="forearm_link" link2="wrist_link" reason="Adjacent"/>
+  <disable_collisions link1="wrist_link" link2="hand_link" reason="Adjacent"/>
+  <disable_collisions link1="hand_link" link2="tool_link" reason="Adjacent"/>
+</robot>

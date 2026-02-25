@@ -1,0 +1,7 @@
+workspace/build/
+workspace/install/
+workspace/log/
+.git/
+.gitignore
+README.md
+*.md
